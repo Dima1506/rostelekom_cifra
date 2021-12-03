@@ -22,7 +22,7 @@ app = FastAPI()
 
 @app.get("/login")
 def login():
-    return {"url": "https://tvscp.tionix.ru/realms/master/protocol/openid-connect/auth?response_type=code&grant_type=authorization_code&client_id=tvscp&scope=openid&redirect_uri=https://oauth.pstmn.io/v1/callback"}
+    return {"url": "https://tvscp.tionix.ru/realms/master/protocol/openid-connect/auth?response_type=code&grant_type=authorization_code&client_id=tvscp&scope=openid&redirect_uri=http:/localhost:3000"}
 
 
 @app.post("/get_token")
@@ -33,7 +33,7 @@ def get_token(code: str):
         'client_secret': 'f3e94369-53ac-43d5-842e-09fe6d8a71ff',
         'grant_type': 'authorization_code',
         'code': code,
-        'redirect_uri':'https://oauth.pstmn.io/v1/callback'
+        'redirect_uri':'http:/localhost:3000'
     }
 
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}

@@ -25,8 +25,8 @@ def login():
     return {"url": "https://tvscp.tionix.ru/realms/master/protocol/openid-connect/auth?response_type=code&grant_type=authorization_code&client_id=tvscp&scope=openid&redirect_uri=https://oauth.pstmn.io/v1/callback"}
 
 
-@app.post("/get_token")
-def get_token(code: str):
+@app.post("/get_info")
+def get_info(code: str):
     url = 'https://tvscp.tionix.ru/realms/master/protocol/openid-connect/token'
     payload = {
         'client_id': 'tvscp',
@@ -39,13 +39,12 @@ def get_token(code: str):
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     r = requests.post(url, data=payload, headers=headers)
     #print(r.text)
-    token = eval(r.text)['access_token']
-    print(token)
-    return {"token": token}
-
-@app.post("/info_user")
-def info_user(token: str):
-    url = 'https://tvscp.tionix.ru/realms/master/protocol/openid-connect/userinfo'
-    headers={'Authorization':'Bearer '+str(token)}
-    r = requests.post(url, headers=headers)
-    return eval(r.text)
+    try:
+        token = eval(r.text)['access_token']
+        print(token)
+        url = 'https://tvscp.tionix.ru/realms/master/protocol/openid-connect/userinfo'
+        headers={'Authorization':'Bearer '+str(token)}
+        r = requests.post(url, headers=headers)
+        return eval(r.text)
+    except:
+        return {'token':'error'}

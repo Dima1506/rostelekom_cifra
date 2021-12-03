@@ -35,9 +35,8 @@ app.add_middleware(
 async def login():
     return {"url": "https://tvscp.tionix.ru/realms/master/protocol/openid-connect/auth?response_type=code&grant_type=authorization_code&client_id=tvscp&scope=openid&redirect_uri=http://localhost:3000"}
 
-
-@app.post("/get_info")
-async def get_info(code: str):
+@app.post("/get_token")
+async def get_token(code: str):
     url = 'https://tvscp.tionix.ru/realms/master/protocol/openid-connect/token'
     payload = {
         'client_id': 'tvscp',
@@ -52,11 +51,14 @@ async def get_info(code: str):
     #print(r.text)
     try:
         token = eval(r.text)['access_token']
-        print(token)
-        url = 'https://tvscp.tionix.ru/realms/master/protocol/openid-connect/userinfo'
-        headers={'Authorization':'Bearer '+str(token)}
-        r = requests.post(url, headers=headers)
-        user_info = await get_super_info(eval(r.text))
-        return user_info
+        return {'token':token}
     except:
         return {'token':'error'}
+
+@app.post("/get_info")
+async def get_info(token: str):
+    url = 'https://tvscp.tionix.ru/realms/master/protocol/openid-connect/userinfo'
+    headers={'Authorization':'Bearer '+str(token)}
+    r = requests.post(url, headers=headers)
+    user_info = await get_super_info(eval(r.text))
+    return user_info

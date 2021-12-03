@@ -17,8 +17,19 @@ from sklearn.manifold import TSNE
 from tqdm.notebook import tqdm
 import matplotlib.pyplot as plt
 from .module import get_super_info
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 
 @app.get("/login")
 async def login():

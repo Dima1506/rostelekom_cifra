@@ -11,3 +11,7 @@ sklearn
 tqdm
 matplotlib
 pymorphy2
+dostoevsky
+wordcloud
+pillow
+ipywidgets

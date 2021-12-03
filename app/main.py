@@ -16,17 +16,17 @@ from nltk import FreqDist
 from sklearn.manifold import TSNE
 from tqdm.notebook import tqdm
 import matplotlib.pyplot as plt
+from .module import get_super_info
 
 app = FastAPI()
 
-
 @app.get("/login")
-def login():
+async def login():
     return {"url": "https://tvscp.tionix.ru/realms/master/protocol/openid-connect/auth?response_type=code&grant_type=authorization_code&client_id=tvscp&scope=openid&redirect_uri=http://localhost:3000"}
 
 
 @app.post("/get_info")
-def get_info(code: str):
+async def get_info(code: str):
     url = 'https://tvscp.tionix.ru/realms/master/protocol/openid-connect/token'
     payload = {
         'client_id': 'tvscp',
@@ -45,6 +45,7 @@ def get_info(code: str):
         url = 'https://tvscp.tionix.ru/realms/master/protocol/openid-connect/userinfo'
         headers={'Authorization':'Bearer '+str(token)}
         r = requests.post(url, headers=headers)
-        return eval(r.text)
+        user_info = await get_super_info(eval(r.text))
+        return user_info
     except:
         return {'token':'error'}
